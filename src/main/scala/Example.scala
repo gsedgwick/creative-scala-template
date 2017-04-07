@@ -22,9 +22,18 @@ val housewithcrazydoor = roof above door
  val street = (rectangle(20,5) fillColor Color.yellow) beside (rectangle(15,5) fillColor Color.black) above (rectangle(35,5) fillColor Color.black)
 
   val fullstreet = street beside street beside street beside street
+
+
 //why is there a little gap between the street segments?
+
+  val tree = (circle(25) fillColor Color.green) above rectangle(20,20) fillColor Color.brown
+
 
   val part1 = "The"
   val part2 = "Knights"
-  val aaa = println("Hello");println(part2)
+  val part3 = "Who"
+  val part4 = "Say"
+  val part5 = "Ni"
+  val aaa = println(part1);println(part2);println(part3);println(part4);println(part5)
+
 }
