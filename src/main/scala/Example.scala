@@ -109,21 +109,40 @@ def chessboard (count: Int): Image = {
 }
 
 def sierpinski(count: Int): Image = {
-  val pinktriangle = Image.triangle(20,20).lineColor(Color.pink)
+  val pinktriangle = Image.triangle(20, 20).lineColor(Color.pink)
   count match {
     case 0 => pinktriangle above (pinktriangle beside pinktriangle)
     case n =>
-      val unit = sierpinski(n-1)
+      val unit = sierpinski(n - 1)
       unit above (unit beside unit)
   }
+}
 //Example.sierpinski(4).draw
 //Question on this  - when doing x above (x beside x) it automatically centers the top shape between the bottom two shapes, how does it
 //know to do this?  Can you change that behavior?
 
 
+//Recursion examples
+  //identity works
+  //double doesn't work as you're doubling each number between the number you pass in and 0.  So I suppose it would with 0 or 1, but nothing else
 
+//Gradient Boxes
+  def gradientBoxes(count: Int, size: Int, spinStart: Int): Image = {
+    count match {
+      case 0 => Image.empty
+      case n => Image.rectangle(size, size).fillColor(Color.royalBlue.spin(spinStart.degrees)).lineColor(Color.pink.spin(spinStart.degrees)) beside gradientBoxes(n-1, size, spinStart + 10)
+    }
+  }
+
+
+
+def concCircles(count: Int, size: Int, spinner: Int): Image = {
+  count match {
+    case 0 => Image.empty
+    case n => Image.circle(size).lineColor(Color.royalBlue.spin(spinner.degrees)) on concCircles(n-1, size + 10, spinner + 10)
+  }
 }
-
-
+//Example.concCircles(20,20).draw
+  //For changing colors Example.concCircles(20,20,20).draw
 
 }
