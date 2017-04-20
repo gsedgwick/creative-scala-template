@@ -61,4 +61,69 @@ genericBox(Color.paleGoldenrod)
   def halfme (input: Double) = {
     input / 2.0
   }
+
+//**********Chapter 7**************
+
+def aBox = Image.rectangle(20,20).fillColor(Color.royalBlue)
+
+def boxes (count: Int): Image = {
+  count match {
+    case 0 => Image.empty
+    case n => aBox beside boxes(n-1) above boxes (n-1)  //Funky!//
+  }
+}
+
+//Guess Result
+  //abcd = 2 since it is matching on exact string
+  // 1 = "one".  It would match both One and Two but = one since it comes first in expression
+  //1 = 2 since it matches the wildcard n and resolves to n +1, which here is 1 + 1.
+  //1 = 1 since it matches the wildcard a. It would match all of them (a,b,c) but does a since a is first.
+  // No match = would get an error when running program.  Could would compile but stop when it gets to that section.
+
+  def cross (count: Int): Image = {
+    val unit = Image.circle(44)
+    count match {
+      case 0 => Image.empty
+      //case n => unit beside unit above cross (n-1)  /tall rectangle
+      //case n => unit above (unit beside cross(-1))  //this fails
+      //case n => unit beside (unit above cross (n-1) above unit)  //cool curvy arrow, why does it do that?
+      case n => unit beside (unit above cross (n-1) above unit) beside unit  //the right answer
+    }
+  }
+
+def chessboard (count: Int): Image = {
+  val redsquare = Image.rectangle(20,20).fillColor(Color.red)
+  val blacksquare = Image.rectangle(20,20).fillColor(Color.black)
+  val square4 =  (redsquare beside blacksquare) above (blacksquare beside redsquare)
+  count match {
+    case 0 => square4
+    //case n => ((redsquare beside blacksquare) above (blacksquare beside redsquare)) beside chessboard (n-1) // this gives me one block
+    //case n => (((redsquare beside blacksquare) above (blacksquare beside redsquare)) beside chessboard (n-1)) above chessboard(n-1) //cool picture, but not a chessboard...
+    case n =>
+      val unit = chessboard(n-1)
+      (unit beside unit) above (unit beside unit)
+  }
+  //Example.chessboard(2).draw
+
+
+}
+
+def sierpinski(count: Int): Image = {
+  val pinktriangle = Image.triangle(20,20).lineColor(Color.pink)
+  count match {
+    case 0 => pinktriangle above (pinktriangle beside pinktriangle)
+    case n =>
+      val unit = sierpinski(n-1)
+      unit above (unit beside unit)
+  }
+//Example.sierpinski(4).draw
+//Question on this  - when doing x above (x beside x) it automatically centers the top shape between the bottom two shapes, how does it
+//know to do this?  Can you change that behavior?
+
+
+
+}
+
+
+
 }
