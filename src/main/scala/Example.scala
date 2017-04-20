@@ -1,5 +1,9 @@
 import doodle.core.Color
 import doodle.core.Image._
+import doodle.core._
+import doodle.syntax._
+import doodle.jvm.Java2DCanvas._
+import doodle.backend.StandardInterpreter._
 
 // To use this example, open the SBT console and type:
 //
@@ -34,6 +38,27 @@ val housewithcrazydoor = roof above door
   val part3 = "Who"
   val part4 = "Say"
   val part5 = "Ni"
-  val aaa = println(part1);println(part2);println(part3);println(part4);println(part5)
+  //val aaa = println(part1);println(part2);println(part3);println(part4);println(part5)
 
+
+  //Chapter 6
+  val box =
+    rectangle(40,40).lineWidth(5.0).lineColor(Color.royalBlue.spin(30.degrees)).fillColor(Color.royalBlue)
+
+  val boxes = box beside box beside box beside box beside box
+
+  def genericBox(color: Color): Image = {
+    val box =  rectangle(40,40).lineWidth(5.0).lineColor(Color.royalBlue.spin(30.degrees)).fillColor(color)
+    box beside box beside box beside box beside box
+  }
+
+genericBox(Color.paleGoldenrod)
+
+  def squareme (input: Int) = {
+    input * input
+  }
+
+  def halfme (input: Double) = {
+    input / 2.0
+  }
 }
