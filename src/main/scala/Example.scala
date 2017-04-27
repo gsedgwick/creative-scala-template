@@ -174,7 +174,73 @@ loop(samples)
 
 //What is the type of function of roseFn?  Takes Angle returns point
 //roseFn as function literal
-  val roseFn = (angle: Angle) => Point.cartesian((angle * 12).cos  * angle.cos, (angle * 12).cos * angle.sin)
+  val roseFnLit = (angle: Angle) => Point.cartesian((angle * 12).cos  * angle.cos, (angle * 12).cos * angle.sin)
+
+
+  def concentricShapes(count: Int, singleShape: Int => Image): Image =
+  count match {
+    case 0 => Image.empty
+    case n => singleShape(n) on concentricShapes(n-1, singleShape)
+  }
+
+  def colorSpin(n: Int, factor: Int, spinUp: Boolean): Color  =
+    spinUp match {
+    case true => Color.blue spin (n * factor).degrees
+    case false => Color.blue spin (n * factor * -1).degrees
+  }
+
+  def prettyCircle(n: Int) = {
+    //val color = Color.blue spin (n * 10).degrees
+    val shape = Image.circle(10 + n * 10)
+    shape lineWidth 10 lineColor colorSpin(n,n, true)
+  }
+
+  def prettyTriangle(n: Int) = {
+    //val color = Color.blue spin (n * 10).degrees
+    val shape = Image.triangle(66 + n*10, 66 + n*10)
+    shape lineWidth 10 lineColor colorSpin(n,n, false)
+  }
+
+  def prettySquare(n:Int) = {
+    //val color = Color.blue spin (n * 10).degrees
+    val shape = Image.rectangle(66 + n*10, 66 + n*10)
+    shape lineWidth 10 lineColor colorSpin(n,n, true)
+  }
+
+
+  val noWhammies = concentricShapes(10, prettyCircle) beside concentricShapes(10, prettyTriangle) beside concentricShapes(10, prettySquare)
+  val noWhammiesTrippy = concentricShapes(10, prettyCircle) on concentricShapes(10, prettyTriangle) on concentricShapes(10, prettySquare)
+
+  /////Combine
+  def parametricCircle(angle: Angle): Point =
+  Point.cartesian(angle.cos, angle.sin)
+
+  def roseate(angle: Angle): Point = Point.cartesian((angle * 7).cos * angle.cos, (angle*7).cos * angle.sin)
+
+  def scale(factor: Double): Point => Point =
+    (pt: Point) => { Point.polar(pt.r * factor, pt.angle)
+    }
+
+  def sample(start: Angle, samples: Int, location: Angle => Point): Image = {
+    val step = Angle.one / samples
+    val dot = triangle(10,10)
+    def loop(count: Int): Image = {
+      val angle = step * count
+      count match {
+        case 0 => Image.empty
+        case n => dot.at(location(angle).toVec) on loop(n-1)
+      }
+    }
+    loop(samples)
+   }
+
+  def locate(scale: Point => Point, point: Angle => Point): Angle => Point = (angle: Angle) => scale(point(angle))
+
+  val flower = {
+    sample(0.degrees, 200, locate(scale(200), rose _)) on
+    sample(0.degrees, 40, locate(scale(150), parametricCircle _ ))
+
+  }
 
 
 }
