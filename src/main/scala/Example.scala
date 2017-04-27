@@ -145,4 +145,36 @@ def concCircles(count: Int, size: Int, spinner: Int): Image = {
 //Example.concCircles(20,20).draw
   //For changing colors Example.concCircles(20,20,20).draw
 
+
+////Chapter 8
+
+def dot = Image.circle(5).lineWidth(3).lineColor(Color.crimson)
+  def squareDots = dot.at(0,0).
+    on(dot.at(0,100)).
+  on(dot.at(100,100)).
+  on(dot.at(100,0))
+
+def paraCircle(angle: Angle): Point = Point.polar(200,angle)
+def rose(angle: Angle) = Point.polar((angle*12).cos * 200, angle)
+ val roseFn = rose _
+
+
+def sample(start: Angle, samples: Int): Image = {
+  val step = Angle.one / samples
+  val dot = triangle(10,10)
+  def loop(count: Int): Image = {
+    val angle = step * count
+    count match {
+      case 0 => Image.empty
+      case n => dot.at(rose(angle).toVec) on loop(n-1)
+    }
+  }
+loop(samples)
+}
+
+//What is the type of function of roseFn?  Takes Angle returns point
+//roseFn as function literal
+  val roseFn = (angle: Angle) => Point.cartesian((angle * 12).cos  * angle.cos, (angle * 12).cos * angle.sin)
+
+
 }
