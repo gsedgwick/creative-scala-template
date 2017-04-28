@@ -1,11 +1,8 @@
-import doodle.core._
 import doodle.core.Image._
 import doodle.core.{Color, _}
 import doodle.syntax._
-import doodle.jvm.Java2DCanvas._
-import doodle.backend.StandardInterpreter._
 
-import cats.syntax.semigroup._
+//import cats.syntax.semigroup._
 import cats.Monoid
 import cats.implicits._
 
@@ -255,12 +252,21 @@ object Example {
 
   }
 
+  //class on 4/28
+
+  implicit object pointInstance extends Monoid[Point] {
+    def empty = Point.zero
+    def combine(x: Point, y: Point): Point =
+    Point(x.x + y.x, x.y + y.y)
+  }
+
   val circle44: Double => (Angle => Point) =
     (frequency: Double) => (a: Angle) => Point.polar(1.0, a * frequency)
   val scale44: Double => (Point => Point) =
     (r: Double) => (pt: Point) => Point(pt.x * r, pt.y * r)
 
   val curve44: Double => Angle => Point =
+    (r: Double) =>
     (circle44(1) andThen scale44(100)) |+| (circle44(6) andThen scale44(50)) |+| (circle44(-14) andThen scale44(33))
 
   val sample2: Int => (Angle => Image) => Image =
@@ -283,5 +289,5 @@ object Example {
 
 val image44 = sample2(200)(curve44(200) andThen style)
 
-
+val image88 = sample2(400)(curve44(20) andThen style)
 }
