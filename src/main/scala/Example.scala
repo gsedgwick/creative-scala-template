@@ -256,8 +256,9 @@ object Example {
 
   implicit object pointInstance extends Monoid[Point] {
     def empty = Point.zero
+
     def combine(x: Point, y: Point): Point =
-    Point(x.x + y.x, x.y + y.y)
+      Point(x.x + y.x, x.y + y.y)
   }
 
   val circle44: Double => (Angle => Point) =
@@ -267,7 +268,7 @@ object Example {
 
   val curve44: Double => Angle => Point =
     (r: Double) =>
-    (circle44(1) andThen scale44(100)) |+| (circle44(6) andThen scale44(50)) |+| (circle44(-14) andThen scale44(33))
+      (circle44(1) andThen scale44(100)) |+| (circle44(6) andThen scale44(50)) |+| (circle44(-14) andThen scale44(33))
 
   val sample2: Int => (Angle => Image) => Image =
     (n: Int) => {
@@ -287,7 +288,25 @@ object Example {
     (pt: Point) =>
       Image.circle(3).at(pt.toVec).lineColor(Color.royalBlue).fillColor(Color.hsla(pt.angle, 0.7.normalized, 0.7.normalized, 0.5.normalized))
 
-val image44 = sample2(200)(curve44(200) andThen style)
+  val image44 = sample2(200)(curve44(200) andThen style)
 
-val image88 = sample2(400)(curve44(20) andThen style)
+  val image88 = sample2(400)(curve44(20) andThen style)
+
+
+  //Shapes, Sequences and Stars
+  def reverse[A](list: List[A]): List[A] = {
+    def iter(list: List[A], reversed: List[A]): List[A] =
+      list match {
+        case Nil => reversed
+        case hd :: tl => iter(tl, hd :: reversed)
+      }
+
+    iter(list, Nil)
+  }
+
+  def ascending(n: Int):List[Int]=
+    (0 until n).toList.map(x=>x+1)
+
+  //no time to experiment but the chapter was very helpful.
+
 }
