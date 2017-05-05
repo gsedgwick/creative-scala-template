@@ -1,7 +1,7 @@
 import doodle.core.Image._
 import doodle.core.{Color, _}
 import doodle.syntax._
-
+import doodle.random._
 //import cats.syntax.semigroup._
 import cats.Monoid
 import cats.implicits._
@@ -308,5 +308,44 @@ object Example {
     (0 until n).toList.map(x=>x+1)
 
   //no time to experiment but the chapter was very helpful.
+
+  //Random Circles
+/*  Random.int()
+
+  We going to create random circles inside a circle. (This is called "generative art". If you own a beret now is a good time to put it on.)
+
+  We're going to use `map` and a new tool, `flatMap`, in a different context. The idea is to broaden how we think about these tools.
+
+    Step 1.
+  - How could we create a point that is randomly located within a circle? There are many ways to do this. Think of one.
+    - Use the following methods to create random numbers (you'll need to `import doodle.random._`)
+  `Random.double`
+  `Random.natural`
+  `Random.int`
+
+  also `Random[A] map (A => B): Random[B]` and
+  `Random[A] flatMap (A => Random[B]): Random[B]`
+  to compose functions with `Random` and thus transform them
+  - Now implement your method to a create point.
+  - Finally, call the `run` method and you should get a `Point`.
+
+  Step 2.
+  - Given a random point, transform it into a random circle (choose size and color at random)
+  - Don't use `run`---you're only allowed to call `run` at the very end!
+    - Draw an `Image` (you're only allowed to call `run` immediately before you call `draw`)
+
+  Step 3.
+  - Create lots of random circles to create a picture of circles arranged in a circle shape.
+  - Don't use `run`---you're only allowed to call `run` at the very end!
+
+  */
+
+  val angle: Random[Angle] = Random.int(0,360).map(_.degrees)
+
+  val scale: Double => (Point => Point) =
+    (r: Double) => (pt: Point) => Point(pt.x * r, pt.y * r)
+
+  //github / sharedsource/Tiles.scala
+  
 
 }
