@@ -2,9 +2,13 @@ import doodle.core.Image._
 import doodle.core.{Color, _}
 import doodle.syntax._
 import doodle.random._
+import doodle.turtle.Instruction.branch
 //import cats.syntax.semigroup._
 import cats.Monoid
 import cats.implicits._
+import doodle.turtle._
+import doodle.turtle.Instruction._
+
 
 // To use this example, open the SBT console and type:
 //
@@ -244,13 +248,13 @@ object Example {
     loop(samples)
   }
 
-  def locate(scale: Point => Point, point: Angle => Point): Angle => Point = (angle: Angle) => scale(point(angle))
-
-  val flower = {
-    sample(0.degrees, 200, locate(scale(200), rose _)) on
-      sample(0.degrees, 40, locate(scale(150), parametricCircle _))
-
-  }
+//  def locate(scale: Point => Point, point: Angle => Point): Angle => Point = (angle: Angle) => scale(point(angle))
+//
+//  val flower = {
+//    sample(0.degrees, 200, locate(scale(200), rose _)) on
+//      sample(0.degrees, 40, locate(scale(150), parametricCircle _))
+//
+//  }
 
   //class on 4/28
 
@@ -347,5 +351,28 @@ object Example {
 
   //github / sharedsource/Tiles.scala
   
+//Week 6
+  val instructions = List(forward(10), turn(90.degrees),
+    forward(10), turn(90.degrees),
+    forward(10), turn(90.degrees),
+    forward(10)
+  )
+
+  val path = Turtle.draw(instructions)
+
+  def spiral(steps: Int, distance: Double, angle: Angle, increment: Double): Image = {
+    def iter(n: Int, distance: Double): List[Instruction] = {
+      n match {
+        case 0 => Nil
+        case n => forward(distance) :: turn(angle) :: iter(steps - 1, distance + increment)
+      }
+    }
+    Turtle.draw(iter(steps, distance))
+  }
+
+  val fork = Turtle.draw(List(forward(100),  //turned into a square on a stick
+    branch(turn(45.degrees),forward(100),branch(turn(-90.degrees), forward(100))),
+    branch(turn(-45.degrees),forward(100),branch(turn(90.degrees), forward(100)))))
+
 
 }
