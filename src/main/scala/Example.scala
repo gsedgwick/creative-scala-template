@@ -248,13 +248,13 @@ object Example {
     loop(samples)
   }
 
-//  def locate(scale: Point => Point, point: Angle => Point): Angle => Point = (angle: Angle) => scale(point(angle))
-//
-//  val flower = {
-//    sample(0.degrees, 200, locate(scale(200), rose _)) on
-//      sample(0.degrees, 40, locate(scale(150), parametricCircle _))
-//
-//  }
+  //  def locate(scale: Point => Point, point: Angle => Point): Angle => Point = (angle: Angle) => scale(point(angle))
+  //
+  //  val flower = {
+  //    sample(0.degrees, 200, locate(scale(200), rose _)) on
+  //      sample(0.degrees, 40, locate(scale(150), parametricCircle _))
+  //
+  //  }
 
   //class on 4/28
 
@@ -308,13 +308,13 @@ object Example {
     iter(list, Nil)
   }
 
-  def ascending(n: Int):List[Int]=
-    (0 until n).toList.map(x=>x+1)
+  def ascending(n: Int): List[Int] =
+    (0 until n).toList.map(x => x + 1)
 
   //no time to experiment but the chapter was very helpful.
 
   //Random Circles
-/*  Random.int()
+  /*  Random.int()
 
   We going to create random circles inside a circle. (This is called "generative art". If you own a beret now is a good time to put it on.)
 
@@ -344,14 +344,14 @@ object Example {
 
   */
 
-  val angle: Random[Angle] = Random.int(0,360).map(_.degrees)
+  val angle: Random[Angle] = Random.int(0, 360).map(_.degrees)
 
   val scale: Double => (Point => Point) =
     (r: Double) => (pt: Point) => Point(pt.x * r, pt.y * r)
 
   //github / sharedsource/Tiles.scala
-  
-//Week 6
+
+  //Week 6
   val instructions = List(forward(10), turn(90.degrees),
     forward(10), turn(90.degrees),
     forward(10), turn(90.degrees),
@@ -367,12 +367,61 @@ object Example {
         case n => forward(distance) :: turn(angle) :: iter(steps - 1, distance + increment)
       }
     }
+
     Turtle.draw(iter(steps, distance))
   }
 
-  val fork = Turtle.draw(List(forward(100),  //turned into a square on a stick
-    branch(turn(45.degrees),forward(100),branch(turn(-90.degrees), forward(100))),
-    branch(turn(-45.degrees),forward(100),branch(turn(90.degrees), forward(100)))))
+  val fork = Turtle.draw(List(forward(100), //turned into a square on a stick
+    branch(turn(45.degrees), forward(100), branch(turn(-90.degrees), forward(100))),
+    branch(turn(-45.degrees), forward(100), branch(turn(90.degrees), forward(100)))))
 
-//
+  def doubleTheList[A](input: List[A]): List[A] =
+    input.flatMap { x => List(x, x) }
+
+
+  def emptyTheList[A](input: List[A]): List[A] =
+    input.flatMap { x => List.empty }
+
+  def rewrite(instructions: List[Instruction], rule: Instruction => List[Instruction]): List[Instruction] =
+    instructions.flatMap { i =>
+      i match {
+        case Branch(i) => List(branch(rewrite(i, rule): _*))
+        case other => rule(other)
+      }
+
+    }
+
+  //Example.LSystem(5,List(forward(100),forward(100)).draw runs but never finishes.. ???
+  def LSystem(steps: Int, seed: List[Instruction], rule: Instruction => List[Instruction]): List[Instruction] =
+    steps match {
+      case 0 => seed
+      case n => LSystem(n - 1, rewrite(seed, rule), rule)
+    }
+
+  def polygon(sides: Int, length: Double): Image = {
+    val rotation = Angle.one / sides
+    Turtle.draw((1 to sides).toList.flatMap { n =>
+      List(turn(rotation), forward(length))
+    })
+
+  }
+
+  def squareSpiral(steps: Int, distance: Double, angle: Angle, increment: Double): Image = {
+    Turtle.draw((1 to steps).toList.flatMap { n =>
+      List(Forward(distance + (n * increment)), turn(angle))
+    })
+}
+ def spiral = squareSpiral(100, 10, 45.degrees, 0.5)
+
+
+  def randoSpiral(steps: Int, distance: Double, angle: Angle, increment: Double): Image = {
+    Turtle.draw((1 to steps).toList.flatMap { n =>
+      List(Forward(distance + (n * increment * math.random)), turn(angle))
+    })
+  }
+
+//can you change colors with Turtle?
+// I couldn't get the LSystem to actually do anything. It would run and just never finish, I couldn't tell if I messed up or what.  :(
+  
+
 }
